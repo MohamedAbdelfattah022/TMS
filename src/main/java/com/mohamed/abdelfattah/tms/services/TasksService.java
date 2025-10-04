@@ -3,6 +3,7 @@ package com.mohamed.abdelfattah.tms.services;
 import com.mohamed.abdelfattah.tms.dto.TaskDto;
 import com.mohamed.abdelfattah.tms.entities.Task;
 import com.mohamed.abdelfattah.tms.mappers.TaskMapper;
+import com.mohamed.abdelfattah.tms.repositories.ProjectRepository;
 import com.mohamed.abdelfattah.tms.repositories.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TasksService {
     private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
 
     public List<TaskDto> getTasks() {
         return taskRepository.findAll().stream()
@@ -27,8 +29,12 @@ public class TasksService {
         return TaskMapper.mapToDto(task);
     }
 
-    public Integer createTask(TaskDto taskDto) {
+    public Integer createTask(Integer projectId, TaskDto taskDto) {
+        var project =  projectRepository.findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found with id: " + projectId));
+
         Task task = TaskMapper.mapToEntity(taskDto);
+        task.setProject(project);
         return taskRepository.save(task).getId();
     }
 

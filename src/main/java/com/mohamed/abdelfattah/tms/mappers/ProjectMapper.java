@@ -1,5 +1,6 @@
 package com.mohamed.abdelfattah.tms.mappers;
 
+import com.mohamed.abdelfattah.tms.dto.CreateProjectRequestDto;
 import com.mohamed.abdelfattah.tms.dto.ProjectDetailsDto;
 import com.mohamed.abdelfattah.tms.dto.ProjectMemberDto;
 import com.mohamed.abdelfattah.tms.dto.TaskDto;
@@ -39,6 +40,13 @@ public final class ProjectMapper {
                 .userId(projectMember.getId().getUserId())
                 .fullName(projectMember.getUser().getFullName())
                 .email(projectMember.getUser().getEmail())
+                .build();
+    }
+
+    public static Project mapToEntity(CreateProjectRequestDto requestDto) {
+        return Project.builder()
+                .projectName(requestDto.getProjectName())
+                .description(requestDto.getProjectDescription())
                 .build();
     }
 }

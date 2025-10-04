@@ -1,6 +1,8 @@
 package com.mohamed.abdelfattah.tms.services;
 
+import com.mohamed.abdelfattah.tms.dto.CreateProjectRequestDto;
 import com.mohamed.abdelfattah.tms.dto.ProjectDetailsDto;
+import com.mohamed.abdelfattah.tms.dto.UpdateProjectRequestDto;
 import com.mohamed.abdelfattah.tms.entities.Project;
 import com.mohamed.abdelfattah.tms.entities.ProjectMember;
 import com.mohamed.abdelfattah.tms.entities.ProjectMemberId;
@@ -24,7 +26,8 @@ public class ProjectService {
     private final ProjectMemberRepository projectMemberRepository;
 
     @Transactional
-    public Project save(Project project) {
+    public Project save(CreateProjectRequestDto requestDto) {
+        Project project = ProjectMapper.mapToEntity(requestDto);
         return projectRepository.save(project);
     }
 
@@ -67,10 +70,11 @@ public class ProjectService {
         projectMemberRepository.deleteById(projectMemberId);
     }
 
-    public void update(Integer id, Project project) {
+    @Transactional
+    public void update(Integer id, UpdateProjectRequestDto requestDto) {
         Project existingProject = projectRepository.findById(id).orElseThrow();
-        existingProject.setDescription(project.getDescription());
-        existingProject.setProjectName(project.getProjectName());
+        existingProject.setDescription(requestDto.getProjectDescription());
+        existingProject.setProjectName(requestDto.getProjectName());
         projectRepository.save(existingProject);
     }
 

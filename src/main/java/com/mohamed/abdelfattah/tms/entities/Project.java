@@ -1,15 +1,17 @@
 package com.mohamed.abdelfattah.tms.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@Builder
 @Table(name = "projects")
+@AllArgsConstructor
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

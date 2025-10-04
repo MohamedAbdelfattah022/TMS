@@ -15,9 +15,12 @@ import java.util.List;
 public class TasksController {
     private final TasksService tasksService;
 
-    @PostMapping
-    public ResponseEntity<Integer> createTask(@RequestBody TaskDto taskDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(tasksService.createTask(taskDto));
+    @PostMapping("{project-id}")
+    public ResponseEntity<Integer> createTask(
+            @PathVariable("project-id") Integer projectId,
+            @RequestBody TaskDto taskDto
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(tasksService.createTask(projectId, taskDto));
     }
 
     @GetMapping

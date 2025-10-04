@@ -1,6 +1,8 @@
 package com.mohamed.abdelfattah.tms.controllers;
 
+import com.mohamed.abdelfattah.tms.dto.CreateProjectRequestDto;
 import com.mohamed.abdelfattah.tms.dto.ProjectDetailsDto;
+import com.mohamed.abdelfattah.tms.dto.UpdateProjectRequestDto;
 import com.mohamed.abdelfattah.tms.entities.Project;
 import com.mohamed.abdelfattah.tms.services.ProjectService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/projects")
 @RequiredArgsConstructor
-public class ProjectController {
+public class ProjectsController {
     private final ProjectService projectService;
 
     @PostMapping("{projectId}/members/{userId}")
@@ -41,14 +43,14 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> createProject(@RequestBody Project project) {
-        Project savedProject = projectService.save(project);
+    public ResponseEntity<Integer> createProject(@RequestBody CreateProjectRequestDto request) {
+        Project savedProject = projectService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProject.getId());
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> updateProject(@PathVariable Integer id, @RequestBody Project project) {
-        projectService.update(id, project);
+    public ResponseEntity<Void> updateProject(@PathVariable Integer id, @RequestBody UpdateProjectRequestDto request) {
+        projectService.update(id, request);
         return ResponseEntity.noContent().build();
     }
 
