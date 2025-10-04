@@ -5,8 +5,6 @@ import com.mohamed.abdelfattah.tms.dto.ProjectMemberDto;
 import com.mohamed.abdelfattah.tms.dto.TaskDto;
 import com.mohamed.abdelfattah.tms.entities.Project;
 import com.mohamed.abdelfattah.tms.entities.ProjectMember;
-import com.mohamed.abdelfattah.tms.entities.Task;
-import com.mohamed.abdelfattah.tms.entities.User;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +22,7 @@ public final class ProjectMapper {
         List<TaskDto> taskDtos = Optional.ofNullable(project.getTasks())
                 .orElse(Collections.emptyList())
                 .stream()
-                .map(ProjectMapper::mapToDto)
+                .map(TaskMapper::mapToDto)
                 .collect(Collectors.toList());
 
         return ProjectDetailsDto.builder()
@@ -41,19 +39,6 @@ public final class ProjectMapper {
                 .userId(projectMember.getId().getUserId())
                 .fullName(projectMember.getUser().getFullName())
                 .email(projectMember.getUser().getEmail())
-                .build();
-    }
-
-    public static TaskDto mapToDto(Task task) {
-        return TaskDto.builder()
-                .id(task.getId())
-                .title(task.getTitle())
-                .description(task.getDescription())
-                .status(task.getStatus())
-                .priority(task.getPriority())
-                .category(task.getCategory())
-                .attachmentUrl(task.getAttachmentUrl())
-                .assigneeId(Optional.ofNullable(task.getAssignee()).map(User::getId).orElse(null))
                 .build();
     }
 }

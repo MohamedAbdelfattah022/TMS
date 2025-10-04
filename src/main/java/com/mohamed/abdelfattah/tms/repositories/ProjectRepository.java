@@ -1,4 +1,4 @@
-package com.mohamed.abdelfattah.tms.repositoris;
+package com.mohamed.abdelfattah.tms.repositories;
 
 import com.mohamed.abdelfattah.tms.entities.Project;
 import org.springframework.data.jpa.repository.JpaRepository;

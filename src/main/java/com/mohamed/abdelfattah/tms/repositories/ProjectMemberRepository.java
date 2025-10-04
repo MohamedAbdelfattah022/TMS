@@ -1,4 +1,4 @@
-package com.mohamed.abdelfattah.tms.repositoris;
+package com.mohamed.abdelfattah.tms.repositories;
 
 import com.mohamed.abdelfattah.tms.entities.ProjectMember;
 import com.mohamed.abdelfattah.tms.entities.ProjectMemberId;
