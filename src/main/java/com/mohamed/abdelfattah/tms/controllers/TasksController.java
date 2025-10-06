@@ -2,6 +2,7 @@ package com.mohamed.abdelfattah.tms.controllers;
 
 import com.mohamed.abdelfattah.tms.dto.TaskDto;
 import com.mohamed.abdelfattah.tms.services.TasksService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class TasksController {
     public ResponseEntity<Integer> createTask(
             @PathVariable("project-id") Integer projectId,
             @RequestBody TaskDto taskDto
-    ) {
+    ) throws MessagingException {
         return ResponseEntity.status(HttpStatus.CREATED).body(tasksService.createTask(projectId, taskDto));
     }
 
