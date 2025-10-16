@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: TMS
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/taskmanagementsys
+    username: user
+    password: password
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SENDER_EMAIL}
+    password: ${SENDER_EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

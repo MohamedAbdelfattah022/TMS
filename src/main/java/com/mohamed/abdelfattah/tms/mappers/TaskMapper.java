@@ -1,6 +1,7 @@
 package com.mohamed.abdelfattah.tms.mappers;
 
 import com.mohamed.abdelfattah.tms.dto.TaskDto;
+import com.mohamed.abdelfattah.tms.entities.Project;
 import com.mohamed.abdelfattah.tms.entities.Task;
 import com.mohamed.abdelfattah.tms.entities.User;
 
@@ -17,6 +18,7 @@ public class TaskMapper {
                 .category(task.getCategory())
                 .attachmentUrl(task.getAttachmentUrl())
                 .assigneeId(Optional.ofNullable(task.getAssignee()).map(User::getId).orElse(null))
+                .projectId(Optional.ofNullable(task.getProject()).map(Project::getId).orElse(null))
                 .build();
     }
 
@@ -37,6 +39,20 @@ public class TaskMapper {
         return task;
     }
 
+    public static Task mapToEntity(TaskDto taskDto, Project project, User assignee) {
+        Task task = new Task();
+        task.setTitle(taskDto.getTitle());
+        task.setDescription(taskDto.getDescription());
+        task.setStatus(taskDto.getStatus());
+        task.setPriority(taskDto.getPriority());
+        task.setCategory(taskDto.getCategory());
+        task.setAttachmentUrl(taskDto.getAttachmentUrl());
+        task.setProject(project);
+        task.setAssignee(assignee);
+
+        return task;
+    }
+
     public static void mapToEntity(Task task, TaskDto taskDto) {
         task.setTitle(taskDto.getTitle());
         task.setDescription(taskDto.getDescription());
@@ -53,5 +69,15 @@ public class TaskMapper {
         User user = new User();
         user.setId(taskDto.getAssigneeId());
         task.setAssignee(user);
+    }
+
+    public static void mapToEntity(Task task, TaskDto taskDto, User assignee) {
+        task.setTitle(taskDto.getTitle());
+        task.setDescription(taskDto.getDescription());
+        task.setStatus(taskDto.getStatus());
+        task.setPriority(taskDto.getPriority());
+        task.setCategory(taskDto.getCategory());
+        task.setAttachmentUrl(taskDto.getAttachmentUrl());
+        task.setAssignee(assignee);
     }
 }

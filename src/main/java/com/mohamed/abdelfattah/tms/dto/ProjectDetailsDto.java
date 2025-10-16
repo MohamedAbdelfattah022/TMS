@@ -1,7 +1,5 @@
 package com.mohamed.abdelfattah.tms.dto;
 
-import com.mohamed.abdelfattah.tms.entities.ProjectMember;
-import com.mohamed.abdelfattah.tms.entities.Task;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

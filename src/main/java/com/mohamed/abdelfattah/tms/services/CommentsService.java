@@ -6,11 +6,12 @@ import com.mohamed.abdelfattah.tms.dto.UpdateCommentRequest;
 import com.mohamed.abdelfattah.tms.entities.Comment;
 import com.mohamed.abdelfattah.tms.entities.Task;
 import com.mohamed.abdelfattah.tms.entities.User;
+import com.mohamed.abdelfattah.tms.exceptions.ResourceNotFoundException;
 import com.mohamed.abdelfattah.tms.mappers.CommentMapper;
 import com.mohamed.abdelfattah.tms.repositories.CommentRepository;
 import com.mohamed.abdelfattah.tms.repositories.TaskRepository;
 import com.mohamed.abdelfattah.tms.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +23,11 @@ public class CommentsService {
     private final CommentRepository commentRepository;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     public CommentResponse findTaskComment(Integer commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
 
         return CommentMapper.mapToResponse(comment);
     }
@@ -37,32 +39,34 @@ public class CommentsService {
                 .toList();
     }
 
-    public CommentResponse createComment(Integer taskId, CreateCommentRequest request) {
+    public Integer createComment(Integer taskId, CreateCommentRequest request) throws MessagingException {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Task", "id", taskId));
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User commenter = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", request.getUserId()));
 
-        Comment comment = new Comment();
-        comment.setContent(request.getContent());
-        comment.setTask(task);
-        comment.setUser(user);
-
+        Comment comment = CommentMapper.mapToEntity(request, task, commenter);
         Comment savedComment = commentRepository.save(comment);
-        return CommentMapper.mapToResponse(savedComment);
+
+        if (task.getAssignee() != null && !task.getAssignee().getId().equals(commenter.getId()))
+            emailService.sendCommentNotificationEmail(task.getAssignee(), task, commenter, savedComment);
+
+        return savedComment.getId();
     }
 
-    public CommentResponse updateComment(Integer commentId, UpdateCommentRequest request) {
+    public Integer updateComment(Integer commentId, UpdateCommentRequest request) {
         Comment existingComment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
 
-        existingComment.setContent(request.getContent());
-        Comment updatedComment = commentRepository.save(existingComment);
-        return CommentMapper.mapToResponse(updatedComment);
+        CommentMapper.mapToEntity(existingComment, request);
+        return commentRepository.save(existingComment).getId();
     }
 
     public void deleteComment(Integer commentId) {
+        if (!commentRepository.existsById(commentId))
+            throw new ResourceNotFoundException("Comment", "id", commentId);
+
         commentRepository.deleteById(commentId);
     }
 }

@@ -21,4 +21,8 @@ public class ProjectMember {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private ProjectRole role = ProjectRole.DEVELOPER;
 }

@@ -1,16 +1,14 @@
 package com.mohamed.abdelfattah.tms.dto;
 
 import com.mohamed.abdelfattah.tms.entities.ProjectRole;
-import lombok.Builder;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-public class ProjectMemberDto {
-    private Integer userId;
-    private String fullName;
-    private String email;
+public class UpdateMemberRoleRequest {
+    @NotNull(message = "Role is required")
     private ProjectRole role;
 }
+
